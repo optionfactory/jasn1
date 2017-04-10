@@ -17,4 +17,5 @@ for i in $@; do
     fi
 done
 
+#java -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1044 $SYSPROPS -cp $CLASSPATH $MAIN_CLASS $PARAMS
 java $SYSPROPS -cp $CLASSPATH $MAIN_CLASS $PARAMS
