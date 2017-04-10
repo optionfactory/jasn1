@@ -44,6 +44,7 @@ import org.openmuc.jasn1.compiler.model.AsnEnum;
 import org.openmuc.jasn1.compiler.model.AsnInteger;
 import org.openmuc.jasn1.compiler.model.AsnModule;
 import org.openmuc.jasn1.compiler.model.AsnModule.TagDefault;
+import org.openmuc.jasn1.compiler.model.AsnNamedNumber;
 import org.openmuc.jasn1.compiler.model.AsnNull;
 import org.openmuc.jasn1.compiler.model.AsnObjectIdentifier;
 import org.openmuc.jasn1.compiler.model.AsnOctetString;
@@ -307,6 +308,7 @@ public class BerClassWriter {
     private void writeChoiceClass(String className, AsnChoice asn1TypeElement, Tag tag, String isStaticStr)
             throws IOException {
 
+        write("/**\n" +" * Choice class\n" + " */\n");
         write("public" + isStaticStr + " class " + className + " {\n");
 
         write("public byte[] code = null;");
@@ -357,6 +359,7 @@ public class BerClassWriter {
     private void writeSequenceOrSetClass(String className, AsnSequenceSet asnSequenceSet, Tag tag, String isStaticStr)
             throws IOException {
 
+        write("/**\n" +" * Sequence class\n" + " */\n");
         write("public" + isStaticStr + " class " + className + " {\n");
 
         List<AsnElementType> componentTypes = asnSequenceSet.componentTypes;
@@ -517,7 +520,16 @@ public class BerClassWriter {
             throws IOException {
 
         write("public class " + typeName + " extends " + cleanUpName(assignedTypeName) + " {\n");
-
+        if (typeDefinition instanceof AsnEnum) {
+            for (AsnNamedNumber namedNumber: (ArrayList<AsnNamedNumber>)((AsnEnum) typeDefinition).namedNumberList.namedNumbers) {
+                write(String.format(
+                        "public static final %s VALUE_%s = new %s(%sl);",
+                        typeName,
+                        cleanUpName(namedNumber.name),
+                        typeName,
+                        namedNumber.signedNumber.num));
+            }
+        }
         if (tag != null) {
 
             write("public static final BerTag tag = new BerTag(" + getBerTagParametersString(tag) + ");\n");
