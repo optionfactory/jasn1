@@ -1,1 +1,4 @@
 build
+/.nb-gradle/
+/.nb-gradle-properties
+/.gradle/
