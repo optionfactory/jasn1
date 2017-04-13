@@ -49,6 +49,7 @@ import org.openmuc.jasn1.compiler.model.AsnNull;
 import org.openmuc.jasn1.compiler.model.AsnObjectIdentifier;
 import org.openmuc.jasn1.compiler.model.AsnOctetString;
 import org.openmuc.jasn1.compiler.model.AsnReal;
+import org.openmuc.jasn1.compiler.model.AsnRelativeOid;
 import org.openmuc.jasn1.compiler.model.AsnSequenceOf;
 import org.openmuc.jasn1.compiler.model.AsnSequenceSet;
 import org.openmuc.jasn1.compiler.model.AsnTag;
@@ -2154,6 +2155,9 @@ public class BerClassWriter {
             return new String[] { "boolean", "value" };
         }
         else if (typeDefinition instanceof AsnObjectIdentifier) {
+            return new String[] { "int[]", "value" };
+        } 
+        else if (typeDefinition instanceof AsnRelativeOid) {
             return new String[] { "int[]", "value" };
         }
         else if (typeDefinition instanceof AsnBitString) {

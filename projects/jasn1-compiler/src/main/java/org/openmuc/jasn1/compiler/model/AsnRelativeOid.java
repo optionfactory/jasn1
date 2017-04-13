@@ -20,7 +20,7 @@
  */
 package org.openmuc.jasn1.compiler.model;
 
-public class AsnRelativeOid extends AsnType {
+public class AsnRelativeOid extends AsnUniversalType {
     final String BUILTINTYPE = "RELATIVE-OID";
 
 }

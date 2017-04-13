@@ -43,6 +43,7 @@ public class BerTag {
     public static final int REAL_TAG = 9;
     public static final int ENUMERATED_TAG = 10;
     public static final int UTF8_STRING_TAG = 12;
+    public static final int RELATIVE_OID_TAG = 13;
     public static final int NUMERIC_STRING_TAG = 18;
     public static final int PRINTABLE_STRING_TAG = 19;
     public static final int TELETEX_STRING_TAG = 20;

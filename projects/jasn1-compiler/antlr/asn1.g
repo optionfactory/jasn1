@@ -94,7 +94,7 @@ PRESENT_KW				=	"PRESENT"			;
 PRINTABLE_STR_KW		=	"PrintableString"	;
 PRIVATE_KW				=	"PRIVATE"			;
 REAL_KW					=	"REAL"				;
-RELATIVE_KW				=	"RELATIVE"			;
+RELATIVE_OID_KW				=	"RELATIVE-OID"			;
 RESULT_KW				=	"RESULT"			;
 SEQUENCE_KW				=	"SEQUENCE"			;
 SET_KW					=	"SET"				;
@@ -540,7 +540,7 @@ real_type returns [Object obj]
 
 relativeOid_type returns [Object obj]
 {obj = null; }
-	: RELATIVE_KW MINUS OID_KW {obj = new AsnRelativeOid();}
+	: RELATIVE_OID_KW {obj = new AsnRelativeOid();}
 	;
 		
 sequence_type returns [Object obj]
