@@ -2019,19 +2019,30 @@ public class BerClassWriter {
                     + ") {");
             write("this." + instanceName + " = " + instanceName + ";");
             write("}\n");
-            write("public " + typeName + " get" + capitalizeFirstCharacter(instanceName) + "() {");
+            write("public " + typeName + " get" + unqualified(capitalizeFirstCharacter(instanceName)) + "() {");
             write("return " + instanceName + ";");
             write("}\n");
         }
     }
 
     private void writeGetterForSeqOf(String referencedTypeName) throws IOException {
-        write("public List<" + referencedTypeName + "> get" + referencedTypeName + "() {");
+        write("public List<" + referencedTypeName + "> get" + unqualified(referencedTypeName) + "() {");
         write("if (seqOf == null) {");
         write("seqOf = new ArrayList<" + referencedTypeName + ">();");
         write("}");
         write("return seqOf;");
         write("}\n");
+    }
+
+    public String unqualified(String referencedTypeName) {
+        final int lastDotPosition = referencedTypeName.lastIndexOf(".");
+        final String propName;
+        if (lastDotPosition != -1) {
+            propName = referencedTypeName.substring(lastDotPosition+1);
+        } else {
+            propName = referencedTypeName;
+        }
+        return propName;
     }
 
     private String getClassNameOfSequenceOfElement(String className, AsnElementType componentType) throws IOException {
