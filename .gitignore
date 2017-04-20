@@ -2,3 +2,4 @@ build
 /.nb-gradle/
 /.nb-gradle-properties
 /.gradle/
+/projects/jasn1-compiler/src/main/java-gen
