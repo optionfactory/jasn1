@@ -45,15 +45,11 @@ public class BerRelativeOid {
     }
 
     public BerRelativeOid(int[] value) {
-        if ((value.length < 2) || ((value[0] == 0 || value[0] == 1) && (value[1] > 39)) || value[0] > 2) {
-            throw new IllegalArgumentException("invalid object identifier components");
-        }
         for (int objectIdentifierComponent : value) {
             if (objectIdentifierComponent < 0) {
                 throw new IllegalArgumentException("invalid object identifier components");
             }
         }
-
         this.value = value;
 
     }
