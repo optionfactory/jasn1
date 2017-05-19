@@ -70,20 +70,11 @@ public class BerRelativeOid {
             return code.length;
         }
 
-        int firstSubidentifier = 40 * value[0] + value[1];
-
         int subidentifier;
-
         int codeLength = 0;
 
-        for (int i = (value.length - 1); i > 0; i--) {
-
-            if (i == 1) {
-                subidentifier = firstSubidentifier;
-            }
-            else {
-                subidentifier = value[i];
-            }
+        for (int i = (value.length - 1); i >= 0; i--) {
+            subidentifier = value[i];
 
             // get length of subidentifier
             int subIDLength = 1;
@@ -137,32 +128,6 @@ public class BerRelativeOid {
         List<Integer> objectIdentifierComponentsList = new ArrayList<>();
 
         int subIDEndIndex = 0;
-        while ((byteCode[subIDEndIndex] & 0x80) == 0x80) {
-            if (subIDEndIndex >= (length.val - 1)) {
-                throw new IOException("Invalid Object Identifier");
-            }
-            subIDEndIndex++;
-        }
-
-        int subidentifier = 0;
-        for (int i = 0; i <= subIDEndIndex; i++) {
-            subidentifier |= (byteCode[i] << ((subIDEndIndex - i) * 7));
-        }
-
-        if (subidentifier < 40) {
-            objectIdentifierComponentsList.add(0);
-            objectIdentifierComponentsList.add(subidentifier);
-        }
-        else if (subidentifier < 80) {
-            objectIdentifierComponentsList.add(1);
-            objectIdentifierComponentsList.add(subidentifier - 40);
-        }
-        else {
-            objectIdentifierComponentsList.add(2);
-            objectIdentifierComponentsList.add(subidentifier - 80);
-        }
-
-        subIDEndIndex++;
 
         while (subIDEndIndex < length.val) {
             int subIDStartIndex = subIDEndIndex;
@@ -173,7 +138,7 @@ public class BerRelativeOid {
                 }
                 subIDEndIndex++;
             }
-            subidentifier = 0;
+            int subidentifier = 0;
             for (int j = subIDStartIndex; j <= subIDEndIndex; j++) {
                 subidentifier |= ((byteCode[j] & 0x7f) << ((subIDEndIndex - j) * 7));
             }
