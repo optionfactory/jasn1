@@ -20,25 +20,26 @@
  */
 package org.openmuc.jasn1.compiler;
 
-import org.junit.Test;
 
 public class CompileTest {
 
     private static final String generatedSrcDir = "src/test/java-gen/org/openmuc/jasn1/compiler";
     private static final String rootPackageName = "org.openmuc.jasn1.compiler";
     String[] args;
+    
+    public static void main(String[] argv) throws Exception {
+        taggingTestCompiling();
+        testCompiling();
+    }
 
-    @Test
-    public void taggingTestCompiling() throws Exception {
-        args = new String[] { "-o", generatedSrcDir, "-p", rootPackageName, "-f",
+    public static void taggingTestCompiling() throws Exception {
+        String[] args = new String[] { "-o", generatedSrcDir, "-p", rootPackageName, "-f",
                 "src/test/resources/tagging-test.asn" };
         Compiler.main(args);
     }
+    public static void testCompiling() throws Exception {
 
-    @Test
-    public void testCompiling() throws Exception {
-
-        args = new String[] { "-il", "-o", generatedSrcDir, "-p", rootPackageName, "-f",
+        String[] args = new String[] { "-il", "-o", generatedSrcDir, "-p", rootPackageName, "-f",
                 "src/test/resources/compile-test.asn", "-l" };
         Compiler.main(args);
 
