@@ -100,31 +100,23 @@ public class BerLength {
         return lengthLength + 1;
     }
 
-    public static int encodeLength(BerByteArrayOutputStream os, int length) throws IOException {
-        // the indefinite form is ignored for now
+    private static int MIN_LARGE_LEN = 128;
+    private static final int LEN_BITS_PER_OCTET = 8;
 
-        if (length <= 127) {
-            // this is the short form, it is coded differently than the long
-            // form for values > 127
-            os.write((byte) length);
+    public static int encodeLength(BerByteArrayOutputStream os, int length) throws IOException {
+        if (length < 0) {
+            throw new IllegalArgumentException("Invalid negative length: " + length);
+        }
+        if (length < MIN_LARGE_LEN) {
+            os.write(length);
             return 1;
         }
-        else {
-            int numLengthBytes = 1;
-
-            while (((int) (Math.pow(2, 8 * numLengthBytes) - 1)) < length) {
-                numLengthBytes++;
-            }
-
-            for (int i = 0; i < numLengthBytes; i++) {
-                os.write((length >> 8 * i) & 0xff);
-            }
-
-            os.write(0x80 | numLengthBytes);
-
-            return 1 + numLengthBytes;
+        final int lenBits = Integer.SIZE - Integer.numberOfLeadingZeros(length);
+        final int lenOctets = lenBits / LEN_BITS_PER_OCTET + (lenBits % LEN_BITS_PER_OCTET > 0 ? 1 : 0);
+        for (int i = 0; i < lenOctets; i++) {
+            os.write((length >>> (LEN_BITS_PER_OCTET * i)) & 0xFF);
         }
-
+        os.write(0x80 | lenOctets);
+        return 1 + lenOctets;
     }
-
 }

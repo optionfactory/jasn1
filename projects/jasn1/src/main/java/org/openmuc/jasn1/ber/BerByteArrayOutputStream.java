@@ -95,20 +95,15 @@ public class BerByteArrayOutputStream extends OutputStream {
 
     @Override
     public void write(byte[] byteArray) throws IOException {
-        for (int i = byteArray.length - 1; i >= 0; i--) {
-            try {
-                buffer[index] = byteArray[i];
-            } catch (ArrayIndexOutOfBoundsException e) {
-                if (automaticResize) {
-                    resize();
-                    buffer[index] = byteArray[i];
-                }
-                else {
-                    throw new ArrayIndexOutOfBoundsException("buffer.length = " + buffer.length);
-                }
+        while (index < byteArray.length) {
+            if (automaticResize) {
+                resize();
+            } else {
+                throw new ArrayIndexOutOfBoundsException("buffer.length = " + buffer.length);
             }
-            index--;
         }
+        System.arraycopy(byteArray, 0, buffer, index - byteArray.length + 1, byteArray.length);
+        index -= byteArray.length;
     }
 
     /**
