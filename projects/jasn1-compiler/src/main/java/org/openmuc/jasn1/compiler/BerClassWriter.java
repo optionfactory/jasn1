@@ -520,7 +520,7 @@ public class BerClassWriter {
     private void writeRetaggingTypeClass(String typeName, String assignedTypeName, AsnType typeDefinition, Tag tag)
             throws IOException {
 
-        write("public class " + typeName + " extends " + cleanUpName(assignedTypeName) + " {\n");
+        write("public class " + typeName + " extends " + cleanUpName(assignedTypeName) + " implements BerEncodable {\n");
         if (typeDefinition instanceof AsnEnum) {
             for (AsnNamedNumber namedNumber: (ArrayList<AsnNamedNumber>)((AsnEnum) typeDefinition).namedNumberList.namedNumbers) {
                 write(String.format(
