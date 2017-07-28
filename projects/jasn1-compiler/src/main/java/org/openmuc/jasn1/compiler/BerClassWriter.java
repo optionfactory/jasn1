@@ -310,7 +310,7 @@ public class BerClassWriter {
             throws IOException {
 
         write("/**\n" +" * Choice class\n" + " */\n");
-        write("public" + isStaticStr + " class " + className + " {\n");
+        write("public" + isStaticStr + " class " + className + " implements BerEncodable {\n");
 
         write("public byte[] code = null;");
 
@@ -361,7 +361,7 @@ public class BerClassWriter {
             throws IOException {
 
         write("/**\n" +" * Sequence class\n" + " */\n");
-        write("public" + isStaticStr + " class " + className + " {\n");
+        write("public" + isStaticStr + " class " + className + " implements BerEncodable {\n");
 
         List<AsnElementType> componentTypes = asnSequenceSet.componentTypes;
 
@@ -446,7 +446,7 @@ public class BerClassWriter {
     private void writeSequenceOfClass(String className, AsnSequenceOf asnSequenceOf, Tag tag, String isStaticStr)
             throws IOException {
 
-        write("public" + isStaticStr + " class " + className + " {\n");
+        write("public" + isStaticStr + " class " + className + " implements BerEncodable {\n");
 
         AsnElementType componentType = asnSequenceOf.componentType;
 
