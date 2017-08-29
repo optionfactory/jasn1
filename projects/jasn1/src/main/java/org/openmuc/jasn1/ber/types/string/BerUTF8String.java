@@ -23,6 +23,7 @@ package org.openmuc.jasn1.ber.types.string;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerTag;
@@ -39,8 +40,8 @@ public class BerUTF8String extends BerOctetString {
         this.value = value;
     }
 
-    public BerUTF8String(String valueAsString) throws UnsupportedEncodingException {
-        value = valueAsString.getBytes("UTF-8");
+    public BerUTF8String(String valueAsString) {
+        value = valueAsString.getBytes(Charset.forName("UTF-8"));
     }
 
     @Override
