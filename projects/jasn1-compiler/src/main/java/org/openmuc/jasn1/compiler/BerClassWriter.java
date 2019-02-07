@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.compiler.model.AsnAny;
@@ -108,6 +109,14 @@ public class BerClassWriter {
     private final HashMap<String, AsnModule> modulesByName;
     private AsnModule module;
     private File outputDirectory;
+
+    private AsnModule findModuleByName(String name) {
+        AsnModule module = modulesByName.get(name); 
+        if (module == null) {
+            throw new NoSuchElementException("No module named '" + name + "' found");
+        }
+        return module;
+    }
 
     BerClassWriter(HashMap<String, AsnModule> modulesByName, String outputBaseDir, String basePackageName,
             boolean jaxbMode, boolean supportIndefiniteLength) throws IOException {
@@ -1814,7 +1823,7 @@ public class BerClassWriter {
         for (SymbolsFromModule symbolsFromModule : module.importSymbolFromModuleList) {
             for (String importedTypeName : symbolsFromModule.symbolList) {
                 if (typeName.equals(importedTypeName)) {
-                    return isPrimitiveOrRetaggedPrimitive(typeName, modulesByName.get(symbolsFromModule.modref));
+                    return isPrimitiveOrRetaggedPrimitive(typeName, findModuleByName(symbolsFromModule.modref));
                 }
             }
         }
@@ -1865,7 +1874,7 @@ public class BerClassWriter {
         for (SymbolsFromModule symbolsFromModule : module.importSymbolFromModuleList) {
             for (String importedTypeName : symbolsFromModule.symbolList) {
                 if (typeName.equals(importedTypeName)) {
-                    return isPrimitive(typeName, modulesByName.get(symbolsFromModule.modref));
+                    return isPrimitive(typeName, findModuleByName(symbolsFromModule.modref));
                 }
             }
         }
@@ -1905,7 +1914,7 @@ public class BerClassWriter {
         for (SymbolsFromModule symbolsFromModule : module.importSymbolFromModuleList) {
             for (String importedTypeName : symbolsFromModule.symbolList) {
                 if (typeName.equals(importedTypeName)) {
-                    return getUniversalType(typeName, modulesByName.get(symbolsFromModule.modref));
+                    return getUniversalType(typeName, findModuleByName(symbolsFromModule.modref));
                 }
             }
         }
@@ -2243,7 +2252,7 @@ public class BerClassWriter {
             for (SymbolsFromModule symbolsFromModule : module.importSymbolFromModuleList) {
                 for (String importedTypeName : symbolsFromModule.symbolList) {
                     if (typeName.equals(importedTypeName)) {
-                        return isDirectChoice(typeName, modulesByName.get(symbolsFromModule.modref));
+                        return isDirectChoice(typeName, findModuleByName(symbolsFromModule.modref));
                     }
                 }
             }
@@ -2285,7 +2294,7 @@ public class BerClassWriter {
             for (SymbolsFromModule symbolsFromModule : module.importSymbolFromModuleList) {
                 for (String importedTypeName : symbolsFromModule.symbolList) {
                     if (typeName.equals(importedTypeName)) {
-                        return isDirectAny(typeName, modulesByName.get(symbolsFromModule.modref));
+                        return isDirectAny(typeName, findModuleByName(symbolsFromModule.modref));
                     }
                 }
             }
