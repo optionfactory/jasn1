@@ -2326,18 +2326,13 @@ public class BerClassWriter {
         write("import org.openmuc.jasn1.ber.types.*;");
         write("import org.openmuc.jasn1.ber.types.string.*;\n");
 
-        List<String> modulePackages = new ArrayList<>();
-        for (AsnModule module : modulesByName.values()) {
-            if (module != this.module) {
-                modulePackages.add(module.moduleIdentifier.name.replace('-', '.').toLowerCase());
+        for (SymbolsFromModule symbolsFromModule : module.importSymbolFromModuleList) {
+            String importedPkg = basePackageName + symbolsFromModule.modref.replace('-', '.').toLowerCase();
+            for (String importedTypeName : symbolsFromModule.symbolList) {
+                write("import " + importedPkg + "."+cleanUpName(importedTypeName)+";");
             }
         }
-        Collections.sort(modulePackages);
-        for (String modulePackage : modulePackages) {
-            write("import " + basePackageName + modulePackage + ".*;");
-        }
         write("");
-
     }
 
     private void write(String line) throws IOException {
