@@ -1,6 +1,6 @@
 build: FORCE
 	cd projects/jasn1-compiler/antlr && ./compile.sh
-	./gradlew assemble
+	./gradlew assemble --stacktrace
 	mkdir -p build/libs-all
 	cp ./projects/jasn1/build/libs/jasn1-1.7.2.jar build/libs-all/
 	cp ./projects/jasn1-compiler/build/libs/jasn1-compiler-1.7.2.jar build/libs-all/

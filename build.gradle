@@ -5,14 +5,12 @@ buildscript {
     }
   }
   dependencies {
-    classpath "net.saliman:gradle-cobertura-plugin:2.2.8"
     classpath group: "org.asciidoctor", name: "asciidoctorj-pdf", version: "1.5.0-alpha.11"
-    classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:3.0.0"
+    classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:6.4.0"
   }
 }
 
 plugins {
-  id "org.sonarqube" version "1.0"
   id "org.asciidoctor.convert" version "1.5.3"
 }
 
@@ -43,24 +41,14 @@ configure(javaProjects) {
 
   apply plugin: "java"
   apply plugin: "eclipse"
-  apply plugin: "osgi"
-  apply plugin: "maven"
+  apply plugin: "maven-publish"
   apply plugin: "signing"
-  apply plugin: "net.saliman.cobertura"
   apply plugin: "biz.aQute.bnd.builder"
-
-  uploadArchives.enabled = false
   
   group = cfgGroup
 
-  if (!project.properties.containsKey("cfgJavaVersion")) {
-    project.ext {
-      cfgJavaVersion = "1.7"
-    }
-  }
-
-  sourceCompatibility = cfgJavaVersion
-  targetCompatibility = cfgJavaVersion
+  sourceCompatibility = "17"
+  targetCompatibility = "17"
 
   repositories { mavenCentral() }
 
@@ -72,36 +60,13 @@ configure(javaProjects) {
   }
 
   dependencies {
-    testCompile group: "junit", name: "junit", version: "4.12"
-    itestCompile group: "junit", name: "junit", version: "4.12"
+    testImplementation group: "junit", name: "junit", version: "4.12"
+    itestImplementation group: "junit", name: "junit", version: "4.12"
   }
 
   jar {
     manifest {
       version = project.version.replace("-",".");
-    }
-  }
-
-  cobertura {
-  
-    dependencies {
-      testCompile "org.slf4j:slf4j-simple:1.6.1"
-    }
-    coverageFormats = ["html", "xml"]				
-    coverageIgnoreTrivial = true					
-    coverageIgnores = ["org.slf4j.Logger.*"]			
-    coverageReportDir = new File("$buildDir/reports/cobertura")
-    coverageTestTasks {
-      project.tasks.withType(Test).matching {it.name == "test"}
-    }
- 	  
-  }
-
-  sonarqube {
-    properties {
-      property "sonar.exclusions", "src/main/java-gen/**/*,**/app/**/*"
-      property "sonar.java.coveragePlugin", "cobertura"
-      property "sonar.cobertura.reportPath", "build/reports/cobertura/coverage.xml"
     }
   }
   
@@ -139,12 +104,12 @@ configure(javaProjects) {
 
 
   task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
+    archiveClassifier = "sources"
     from sourceSets.main.allSource
   }
 
   task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = "javadoc"
+    archiveClassifier = "javadoc"
     from javadoc.destinationDir
   }
 
@@ -161,63 +126,6 @@ configure(javaProjects) {
 
 }
 
-
-configure(repositoryProjects) {
-
-  uploadArchives.enabled = true
-
-  if (cfgSignPom) {
-    signing {
-      if ( project.hasProperty("signing.keyId") ) {
-        sign configurations.archives
-      }
-    }
-  }
-  
-  uploadArchives {
-    repositories {
-      mavenDeployer {
-
-        if (cfgSignPom) {
-          beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-        }
-
-        repository(url: cfgRepository) {
-          authentication(userName: cfgRepositoryUser, password: cfgRepositoryPass)
-          if (cfgRepository != null && System.getProperty("https.proxyHost") != null && ((System.getProperty("https.nonProxyHosts") == null) || !cfgRepository.contains(System.getProperty("https.nonProxyHosts")))) {
-            proxy(host: System.getProperty("https.proxyHost"), port:  Integer.parseInt(System.getProperty("https.proxyPort")), type: "https")
-          }
-        }
-        snapshotRepository(url: cfgSnapshotRepository) {
-          authentication(userName: cfgRepositoryUser, password: cfgRepositoryPass)
-          if (cfgSnapshotRepository != null && System.getProperty("https.proxyHost") != null && ((System.getProperty("https.nonProxyHosts") == null) || !cfgSnapshotRepository.contains(System.getProperty("https.nonProxyHosts")))) {
-            proxy(host: System.getProperty("https.proxyHost"), port:  Integer.parseInt(System.getProperty("https.proxyPort")), type: "https")
-          }
-        }
-
-        pom.project {
-          
-          //additional pom information can be found in subproject build.gradle files
-
-          packaging "jar"
-          url "http://www.openmuc.org/"
-
-          scm {
-            url "none"
-            connection "none"
-          }
-
-          developers {
-            developer {
-              id "openmuc"
-              name "OpenMUC Team"
-            }
-          }
-        }
-      }
-    }
-  }
-}
 
 task javadocAll(type: Javadoc) {
 
@@ -281,14 +189,14 @@ tasks.withType(Tar) {
 
   compression = Compression.GZIP
   
-  destinationDir = file("build/distributions/")
+  destinationDirectory = file("build/distributions/")
 }
 
 task (tar, type: Tar) {
-  archiveName = project.name + "-" + project.version + ".tgz"
+  archiveFileName = project.name + "-" + project.version + ".tgz"
 }
 
 task (tarFull, type: Tar) {
   dependsOn(tar)
-  archiveName = project.name + "-" + project.version + "_full.tgz"
+  archiveFileName = project.name + "-" + project.version + "_full.tgz"
 }

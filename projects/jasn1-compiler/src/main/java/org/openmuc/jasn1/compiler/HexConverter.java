@@ -1,6 +1,6 @@
 package org.openmuc.jasn1.compiler;
 
-import javax.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.DatatypeConverter;
 
 public class HexConverter {
 

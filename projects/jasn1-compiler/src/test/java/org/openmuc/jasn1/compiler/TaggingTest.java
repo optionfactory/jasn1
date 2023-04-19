@@ -23,7 +23,7 @@ package org.openmuc.jasn1.compiler;
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
-import javax.xml.bind.DatatypeConverter;
+import jakarta.xml.bind.DatatypeConverter;
 
 import org.junit.Assert;
 import org.junit.Test;
